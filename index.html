@@ -1,237 +1,48 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#111318">
 <title>GD Macro Hub</title>
-
 <style>
 :root {
-  --bg: #111318;
-  --surface: #1b1d23;
-  --card: #22252c;
-  --accent: #b6f28b;
-  --text: #f5f5f7;
-  --muted: #a6a8b2;
-  --border: #373a43;
+  color-scheme: dark;
+  --bg:#111318; --card:#22252c; --surface:#1b1d23;
+  --accent:#b6f28b; --muted:#a6a8b2; --border:#373a43;
 }
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: system-ui, -apple-system, sans-serif;
-}
-
-header {
-  padding: 28px 20px;
-  background:
-    radial-gradient(ellipse at top right, #34452d, transparent 60%),
-    linear-gradient(135deg, #20251f, #17191e);
-  border-bottom: 1px solid var(--border);
-}
-
-.header-inner,
-main {
-  max-width: 1100px;
-  margin: auto;
-}
-
-.logo {
-  font-size: 27px;
-  font-weight: 850;
-  letter-spacing: -1px;
-}
-
-.logo span {
-  color: var(--accent);
-}
-
-header p {
-  color: var(--muted);
-  margin: 7px 0 0;
-}
-
-main {
-  padding: 24px 16px;
-}
-
-.toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 18px;
-}
-
-input,
-select {
-  background: var(--surface);
-  color: var(--text);
-  border: 1px solid var(--border);
-  padding: 13px 15px;
-  border-radius: 13px;
-  font: inherit;
-  outline: none;
-}
-
-input {
-  flex: 1;
-  min-width: 190px;
-}
-
-input:focus,
-select:focus {
-  border-color: var(--accent);
-}
-
-.counter {
-  color: var(--muted);
-  font-size: 13px;
-  margin: 12px 2px 18px;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 18px;
-}
-
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  overflow: hidden;
-  transition: transform .2s, border-color .2s;
-}
-
-.card:hover {
-  transform: translateY(-3px);
-  border-color: #667c55;
-}
-
-.image-wrap {
-  position: relative;
-  background: #292c33;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-}
-
-.screenshot {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.image-placeholder {
-  display: grid;
-  place-items: center;
-  height: 100%;
-  color: var(--accent);
-  font-size: 25px;
-  font-weight: 800;
-  background:
-    radial-gradient(circle at 30% 40%, #43533b, transparent 55%),
-    linear-gradient(135deg, #292c33, #16181d);
-}
-
-.content {
-  padding: 17px;
-}
-
-.content h2 {
-  margin: 0 0 9px;
-  font-size: 21px;
-  overflow-wrap: anywhere;
-}
-
-.tag {
-  display: inline-block;
-  padding: 5px 10px;
-  border-radius: 8px;
-  background: #343b30;
-  color: var(--accent);
-  font-size: 12px;
-  font-weight: 650;
-}
-
-.info {
-  margin-top: 13px;
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.9;
-  overflow-wrap: anywhere;
-}
-
-.download {
-  display: block;
-  margin-top: 16px;
-  padding: 12px;
-  border-radius: 12px;
-  text-align: center;
-  text-decoration: none;
-  font-weight: 750;
-  background: var(--accent);
-  color: #172012;
-  transition: filter .2s;
-}
-
-.download:hover {
-  filter: brightness(1.1);
-}
-
-.no-download {
-  margin-top: 14px;
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.message {
-  padding: 35px 10px;
-  text-align: center;
-  color: var(--muted);
-}
-
-footer {
-  text-align: center;
-  padding: 28px 15px;
-  color: var(--muted);
-  font-size: 13px;
-  border-top: 1px solid var(--border);
-}
-
-@media (max-width: 450px) {
-  header { padding: 23px 16px; }
-  .logo { font-size: 24px; }
-  .grid { grid-template-columns: 1fr; }
-}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#f5f5f7;font-family:system-ui,sans-serif}
+header{padding:26px 18px;background:radial-gradient(ellipse at top right,#34452d,transparent 60%),#191b1f;border-bottom:1px solid var(--border)}
+header h1{max-width:1100px;margin:auto;font-size:27px}
+header h1 span{color:var(--accent)}
+header p{max-width:1100px;margin:6px auto 0;color:var(--muted)}
+main{max-width:1100px;margin:auto;padding:22px 16px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap}
+input,select{background:var(--surface);color:white;border:1px solid var(--border);padding:13px;border-radius:12px;font:inherit}
+input{flex:1;min-width:180px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:17px;margin-top:18px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:19px;overflow:hidden}
+.preview{aspect-ratio:16/9;background:#292c33}
+.preview img{width:100%;height:100%;object-fit:cover;display:block}
+.placeholder{height:100%;display:grid;place-items:center;color:var(--accent);font-weight:800;font-size:25px;background:linear-gradient(135deg,#30382d,#191b20)}
+.content{padding:16px}
+h2{font-size:20px;margin:0 0 9px;overflow-wrap:anywhere}
+.tag{display:inline-block;background:#343b30;color:var(--accent);padding:5px 9px;border-radius:8px;font-size:12px}
+.info{color:var(--muted);font-size:13px;line-height:1.9;margin-top:12px;overflow-wrap:anywhere}
+.download{display:block;margin-top:14px;padding:12px;border-radius:12px;background:var(--accent);color:#172012;text-align:center;text-decoration:none;font-weight:750}
+#status{color:var(--muted);padding:18px 0}
+footer{text-align:center;padding:25px;color:var(--muted);font-size:13px}
 </style>
 </head>
-
 <body>
-
 <header>
-  <div class="header-inner">
-    <div class="logo">GD <span>Macro Hub</span></div>
-    <p>Geometry Dash • Macro showcase & downloads</p>
-  </div>
+  <h1>GD <span>Macro Hub</span></h1>
+  <p>Geometry Dash • Macro showcase & downloads</p>
 </header>
-
 <main>
   <div class="toolbar">
-    <input
-      id="search"
-      type="search"
-      placeholder="🔎 Поиск уровня или автора"
-      autocomplete="off"
-    >
-
+    <input id="search" placeholder="🔎 Поиск уровня или автора">
     <select id="difficulty">
       <option value="">Все сложности</option>
       <option>Easy Demon</option>
@@ -241,194 +52,93 @@ footer {
       <option>Extreme Demon</option>
       <option>Impossible</option>
     </select>
-
-    <select id="sort">
-      <option value="default">По умолчанию</option>
-      <option value="az">Название: A–Z</option>
-      <option value="duration">Длительность</option>
-    </select>
   </div>
-
-  <div class="counter" id="counter">Загрузка макросов...</div>
-  <div class="grid" id="cards"></div>
-  <div class="message" id="message" hidden></div>
+  <div id="status">Загрузка макросов...</div>
+  <div id="cards" class="grid"></div>
 </main>
+<footer>GD Macro Hub • Community project</footer>
 
-<footer>
-  GD Macro Hub • Fan-made Geometry Dash project
-</footer>
+<script type="module">
+import { db } from "./firebase.js";
+import {
+  collection, onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
-<script>
-const cardsElement = document.getElementById("cards");
-const counterElement = document.getElementById("counter");
-const messageElement = document.getElementById("message");
-
-const searchElement = document.getElementById("search");
-const difficultyElement = document.getElementById("difficulty");
-const sortElement = document.getElementById("sort");
-
+const cards = document.querySelector("#cards");
+const status = document.querySelector("#status");
+const search = document.querySelector("#search");
+const difficulty = document.querySelector("#difficulty");
 let macros = [];
 
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, char => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  })[char]);
+function esc(v) {
+  return String(v ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  })[c]);
 }
 
-// Разрешаем только HTTP(S)-ссылки на изображения и файлы.
-function safeURL(value) {
+function safeURL(v) {
   try {
-    const url = new URL(value, window.location.href);
-
-    if (url.protocol === "https:" || url.protocol === "http:") {
-      return url.href;
-    }
-  } catch (_) {}
-
+    const u = new URL(v);
+    if (u.protocol === "https:" || u.protocol === "http:") return u.href;
+  } catch {}
   return "";
 }
 
-function formatDuration(value) {
-  const seconds = Number(value);
-
-  if (!Number.isFinite(seconds)) {
-    return "—";
-  }
-
-  return `${seconds.toFixed(3).replace(/0+$/, "").replace(/\.$/, "")} сек.`;
-}
-
-function createCard(macro) {
-  const screenshotURL = safeURL(macro.screenshot);
-  const downloadURL = safeURL(macro.download);
-
-  const image = screenshotURL
-    ? `<img
-         class="screenshot"
-         src="${escapeHTML(screenshotURL)}"
-         alt="Скриншот ${escapeHTML(macro.level)}"
-         loading="lazy"
-         onerror="this.parentElement.innerHTML='<div class=&quot;image-placeholder&quot;>GD Macro</div>'"
-       >`
-    : `<div class="image-placeholder">${escapeHTML(macro.level)}</div>`;
-
-  const download = downloadURL
-    ? `<a
-         class="download"
-         href="${escapeHTML(downloadURL)}"
-         download
-         target="_blank"
-         rel="noopener noreferrer"
-       >↓ Скачать макрос</a>`
-    : `<div class="no-download">Ссылка на макрос не добавлена</div>`;
-
-  return `
-    <article class="card">
-      <div class="image-wrap">
-        ${image}
-      </div>
-
-      <div class="content">
-        <h2>${escapeHTML(macro.level || "Без названия")}</h2>
-
-        <span class="tag">
-          ${escapeHTML(macro.difficulty || "Не указана")}
-        </span>
-
-        <div class="info">
-          Автор: ${escapeHTML(macro.author || "Не указан")}<br>
-          Бот: ${escapeHTML(macro.bot || "Не указан")}<br>
-          FPS: ${escapeHTML(macro.fps ?? "—")}<br>
-          Длительность: ${escapeHTML(formatDuration(macro.duration))}<br>
-          Версия GD: ${escapeHTML(macro.version || "—")}
-        </div>
-
-        ${download}
-      </div>
-    </article>
-  `;
-}
-
 function render() {
-  const query = searchElement.value.toLowerCase().trim();
-  const selectedDifficulty = difficultyElement.value;
+  const q = search.value.trim().toLowerCase();
+  const d = difficulty.value;
 
-  let filtered = macros.filter(macro => {
-    const level = String(macro.level || "").toLowerCase();
-    const author = String(macro.author || "").toLowerCase();
-    const bot = String(macro.bot || "").toLowerCase();
+  const list = macros.filter(m =>
+    [m.level, m.author, m.bot].some(v =>
+      String(v || "").toLowerCase().includes(q)
+    ) && (!d || m.difficulty === d)
+  );
 
-    const matchesSearch =
-      level.includes(query) ||
-      author.includes(query) ||
-      bot.includes(query);
+  cards.innerHTML = list.map(m => {
+    const img = safeURL(m.screenshot);
+    const file = safeURL(m.download);
+    const duration = Number(m.duration);
+    const durationText = Number.isFinite(duration) ? duration + " сек." : "—";
 
-    const matchesDifficulty =
-      !selectedDifficulty ||
-      macro.difficulty === selectedDifficulty;
+    return `
+      <article class="card">
+        <div class="preview">
+          ${img
+            ? `<img src="${esc(img)}" alt="${esc(m.level)}" loading="lazy"
+                 onerror="this.outerHTML='<div class=&quot;placeholder&quot;>GD Macro</div>'">`
+            : `<div class="placeholder">${esc(m.level || "GD Macro")}</div>`}
+        </div>
+        <div class="content">
+          <h2>${esc(m.level || "Без названия")}</h2>
+          <span class="tag">${esc(m.difficulty || "Не указана")}</span>
+          <div class="info">
+            Автор: ${esc(m.author || "—")}<br>
+            Бот: ${esc(m.bot || "—")}<br>
+            FPS: ${esc(m.fps ?? "—")}<br>
+            Длительность: ${esc(durationText)}<br>
+            Версия GD: ${esc(m.version || "—")}
+          </div>
+          ${file
+            ? `<a class="download" href="${esc(file)}" target="_blank" rel="noopener noreferrer">↓ Скачать макрос</a>`
+            : ""}
+        </div>
+      </article>`;
+  }).join("");
 
-    return matchesSearch && matchesDifficulty;
-  });
-
-  if (sortElement.value === "az") {
-    filtered.sort((a, b) =>
-      String(a.level || "").localeCompare(String(b.level || ""))
-    );
-  }
-
-  if (sortElement.value === "duration") {
-    filtered.sort((a, b) =>
-      (Number(a.duration) || 0) - (Number(b.duration) || 0)
-    );
-  }
-
-  cardsElement.innerHTML = filtered.map(createCard).join("");
-
-  counterElement.textContent =
-    `Макросов: ${filtered.length} из ${macros.length}`;
-
-  messageElement.hidden = filtered.length > 0;
-  messageElement.textContent = filtered.length
-    ? ""
-    : "Ничего не найдено. Попробуй другой запрос.";
+  status.textContent = `Макросов: ${list.length} из ${macros.length}`;
+  if (!list.length) status.textContent += " • Ничего не найдено";
 }
 
-async function loadMacros() {
-  try {
-    const response = await fetch("data.json");
+search.addEventListener("input", render);
+difficulty.addEventListener("change", render);
 
-    if (!response.ok) {
-      throw new Error(`Ошибка HTTP ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    if (!Array.isArray(data.macros)) {
-      throw new Error('В data.json отсутствует массив "macros"');
-    }
-
-    macros = data.macros;
-    render();
-  } catch (error) {
-    counterElement.textContent = "Не удалось загрузить макросы";
-    messageElement.hidden = false;
-    messageElement.textContent =
-      "Проверь data.json и запусти сайт через GitHub Pages или Vercel.";
-
-    console.error(error);
-  }
-}
-
-searchElement.addEventListener("input", render);
-difficultyElement.addEventListener("change", render);
-sortElement.addEventListener("change", render);
-
-loadMacros();
+onSnapshot(collection(db, "macros"), snapshot => {
+  macros = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  render();
+}, error => {
+  console.error(error);
+  status.textContent = "Ошибка загрузки. Проверь настройки Firestore и Rules.";
+});
 </script>
-
 </body>
 </html>
