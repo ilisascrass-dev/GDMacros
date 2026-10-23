@@ -2,15 +2,15 @@
 {
   "macros": [
     {
-      "level": "TON 618",
-      "author": "thetruekiragmd",
-      "difficulty": "Extreme Demon",
+      "level": "Stereo Madness Silent",
+      "author": "Awerlolop",
+      "difficulty": "Insane",
       "bot": "xdBot v2.7-Nako",
       "duration": 69.304,
-      "fps": 1000,
-      "version": "2.2",
+      "fps": 9000,
+      "version": "2.2.208",
       "screenshot": "https://i.ibb.co/ВСТАВЬ-СВОЮ-ПРЯМУЮ-ССЫЛКУ/ton618.png",
-      "download": "macros/ton618.gdr.json"
+      "download": "macros/SilentStereo Madne.gdr.json"
     },
     {
       "level": "Amethyst",
