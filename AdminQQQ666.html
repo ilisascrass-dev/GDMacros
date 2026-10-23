@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111318">
+<title>Macro Hub — Admin</title>
+<style>
+:root{color-scheme:dark;--bg:#111318;--card:#22252c;--surface:#1b1d23;--accent:#b6f28b;--muted:#a6a8b2;--border:#373a43}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#f5f5f7;font-family:system-ui,sans-serif}
+header{padding:22px 18px;background:#1b2119;border-bottom:1px solid var(--border)}
+header h1{max-width:900px;margin:auto;font-size:24px}
+header span{color:var(--accent)}
+main{max-width:900px;margin:auto;padding:20px 15px}
+.panel{background:var(--card);border:1px solid var(--border);padding:18px;border-radius:18px;margin-bottom:18px}
+h2{font-size:19px;margin-top:0}
+input,select{width:100%;padding:12px;margin:6px 0 12px;background:var(--surface);color:white;border:1px solid var(--border);border-radius:11px;font:inherit}
+label{font-size:13px;color:var(--muted)}
+button{padding:11px 15px;border:0;border-radius:11px;background:var(--accent);color:#172012;font-weight:750;font:inherit;cursor:pointer;margin:4px 5px 4px 0}
+button.secondary{background:#393c44;color:white}
+button.danger{background:#6c3338;color:white}
+button:disabled{opacity:.5}
+#status{color:var(--muted);white-space:pre-wrap;overflow-wrap:anywhere}
+.item{padding:13px 0;border-bottom:1px solid var(--border)}
+.item:last-child{border:0}
+.item strong{display:block}
+.small{color:var(--muted);font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.row button{flex:1}
+</style>
+</head>
+<body>
+<header><h1>GD <span>Macro Hub</span> / Admin</h1></header>
+<main>
+  <section id="loginPanel" class="panel">
+    <h2>Вход администратора</h2>
+    <form id="loginForm">
+      <label for="email">Email</label>
+      <input id="email" type="email" autocomplete="username" required>
+      <label for="password">Пароль</label>
+      <input id="password" type="password" autocomplete="current-password" required>
+      <button type="submit">Войти</button>
+    </form>
+  </section>
+
+  <section id="adminPanel" hidden>
+    <div class="panel">
+      <div class="row" style="align-items:center;justify-content:space-between">
+        <h2>Управление макросами</h2>
+        <button id="logout" class="secondary" type="button">Выйти</button>
+      </div>
+      <p id="who" class="small"></p>
+      <p id="status" role="status">Подключение...</p>
+    </div>
+
+    <form id="macroForm" class="panel">
+      <h2 id="formTitle">Добавить макрос</h2>
+      <input id="level" placeholder="Название уровня" required maxlength="120">
+      <input id="author" placeholder="Автор" required maxlength="120">
+
+      <label for="difficulty">Сложность</label>
+      <select id="difficulty" required>
+        <option value="Easy Demon">Easy Demon</option>
+        <option value="Medium Demon">Medium Demon</option>
+        <option value="Hard Demon">Hard Demon</option>
+        <option value="Insane Demon">Insane Demon</option>
+        <option value="Extreme Demon" selected>Extreme Demon</option>
+        <option value="Impossible">Impossible</option>
+      </select>
+
+      <input id="bot" placeholder="Бот, например xdBot v2.7-Nako" required>
+      <input id="duration" type="number" min="0" step="any" placeholder="Длительность (сек.)" required>
+      <input id="fps" type="number" min="1" step="1" placeholder="FPS" required>
+      <input id="version" placeholder="Версия Geometry Dash" value="2.2" required>
+      <input id="screenshot" type="url" placeholder="Прямая ссылка ImgBB (https://...)" required>
+      <input id="download" type="url" placeholder="Ссылка на файл макроса (https://...)" required>
+
+      <button id="save" type="submit">Добавить макрос</button>
+      <button id="cancelEdit" class="secondary" type="button" hidden>Отмена</button>
+    </form>
+
+    <section class="panel">
+      <h2>Существующие макросы</h2>
+      <div id="macroList">Загрузка...</div>
+    </section>
+  </section>
+</main>
+
+<script type="module">
+import { auth, db } from "./firebase.js";
+import {
+  signInWithEmailAndPassword, onAuthStateChanged, signOut
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+import {
+  collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+
+const $ = id => document.getElementById(id);
+const loginPanel = $("loginPanel");
+const adminPanel = $("adminPanel");
+const status = $("status");
+const macroList = $("macroList");
+const form = $("macroForm");
+
+let currentUser = null;
+let macros = [];
+let editingId = null;
+let stopListening = null;
+
+function safeURL(value) {
+  try {
+    const u = new URL(value);
+    return u.protocol === "https:" ? u.href : "";
+  } catch {
+    return "";
+  }
+}
+
+function setStatus(text) {
+  status.textContent = text;
+}
+
+$("loginForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  try {
+    await signInWithEmailAndPassword(auth, $("email").value.trim(), $("password").value);
+    $("password").value = "";
+  } catch (error) {
+    setStatus("Ошибка входа: " + error.message);
+  }
+});
+
+$("logout").addEventListener("click", () => signOut(auth));
+
+onAuthStateChanged(auth, user => {
+  currentUser = user;
+  loginPanel.hidden = !!user;
+  adminPanel.hidden = !user;
+
+  if (stopListening) {
+    stopListening();
+    stopListening = null;
+  }
+
+  if (!user) {
+    macros = [];
+    macroList.replaceChildren();
+    return;
+  }
+
+  $("who").textContent = "Вошли как: " + user.email;
+  setStatus("Проверяем доступ к базе...");
+
+  stopListening = onSnapshot(collection(db, "macros"), snapshot => {
+    macros = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderList();
+    setStatus("Подключено. Карточек: " + macros.length);
+  }, error => {
+    setStatus("Ошибка доступа к Firestore: " + error.message +
+      "\nПроверь firestore.rules и UID администратора.");
+  });
+});
+
+function renderList() {
+  macroList.replaceChildren();
+
+  if (!macros.length) {
+    macroList.textContent = "Макросов пока нет.";
+    return;
+  }
+
+  for (const m of macros) {
+    const item = document.createElement("div");
+    item.className = "item";
+
+    const title = document.createElement("strong");
+    title.textContent = m.level || "Без названия";
+
+    const detail = document.createElement("div");
+    detail.className = "small";
+    detail.textContent = `${m.author || "—"} • ${m.difficulty || "—"}`;
+
+    const edit = document.createElement("button");
+    edit.textContent = "Редактировать";
+    edit.type = "button";
+    edit.className = "secondary";
+    edit.addEventListener("click", () => startEdit(m));
+
+    const remove = document.createElement("button");
+    remove.textContent = "Удалить";
+    remove.type = "button";
+    remove.className = "danger";
+    remove.addEventListener("click", async () => {
+      if (!currentUser || !confirm(`Удалить «${m.level}»?`)) return;
+      try {
+        await deleteDoc(doc(db, "macros", m.id));
+        setStatus("Макрос удалён.");
+      } catch (error) {
+        setStatus("Не удалось удалить: " + error.message);
+      }
+    });
+
+    item.append(title, detail, edit, remove);
+    macroList.append(item);
+  }
+}
+
+function startEdit(m) {
+  editingId = m.id;
+  for (const key of ["level","author","difficulty","bot","duration","fps","version","screenshot","download"]) {
+    $(key).value = m[key] ?? "";
+  }
+  $("formTitle").textContent = "Редактировать макрос";
+  $("save").textContent = "Сохранить изменения";
+  $("cancelEdit").hidden = false;
+  form.scrollIntoView({ behavior: "smooth" });
+}
+
+function resetForm() {
+  editingId = null;
+  form.reset();
+  $("version").value = "2.2";
+  $("difficulty").value = "Extreme Demon";
+  $("formTitle").textContent = "Добавить макрос";
+  $("save").textContent = "Добавить макрос";
+  $("cancelEdit").hidden = true;
+}
+
+$("cancelEdit").addEventListener("click", resetForm);
+
+form.addEventListener("submit", async event => {
+  event.preventDefault();
+  if (!currentUser) return setStatus("Сначала войди в аккаунт.");
+
+  const screenshot = safeURL($("screenshot").value.trim());
+  const download = safeURL($("download").value.trim());
+
+  if (!screenshot || !download) {
+    return setStatus("Используй HTTPS-ссылки на скриншот и файл макроса.");
+  }
+
+  const duration = Number($("duration").value);
+  const fps = Number($("fps").value);
+
+  if (!Number.isFinite(duration) || duration < 0 ||
+      !Number.isInteger(fps) || fps < 1) {
+    return setStatus("Проверь длительность и FPS.");
+  }
+
+  const data = {
+    level: $("level").value.trim(),
+    author: $("author").value.trim(),
+    difficulty: $("difficulty").value,
+    bot: $("bot").value.trim(),
+    duration,
+    fps,
+    version: $("version").value.trim(),
+    screenshot,
+    download,
+    updatedAt: serverTimestamp()
+  };
+
+  if (!data.level || !data.author || !data.bot || !data.version) {
+    return setStatus("Заполни все обязательные поля.");
+  }
+
+  $("save").disabled = true;
+  try {
+    if (editingId) {
+      await updateDoc(doc(db, "macros", editingId), data);
+      setStatus("Изменения сохранены.");
+    } else {
+      await addDoc(collection(db, "macros"), {
+        ...data,
+        createdAt: serverTimestamp()
+      });
+      setStatus("Макрос добавлен!");
+    }
+    resetForm();
+  } catch (error) {
+    setStatus("Ошибка сохранения: " + error.message);
+  } finally {
+    $("save").disabled = false;
+  }
+});
+</script>
+</body>
+</html>
